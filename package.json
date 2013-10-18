@@ -1,0 +1,13 @@
+{
+	"name": "zmqbus",
+	"description": "zeromq-based bus",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"zmq": ">=0.0.1",
+		"async": ">=0.0.1",
+		"should": ">=0.x.x",
+		"node-uuid": ">=0.0.1",
+		"mdns": ">=0.0.1",
+	}
+}
