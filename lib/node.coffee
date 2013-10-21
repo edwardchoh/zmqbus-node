@@ -53,16 +53,16 @@ class ElectedNode extends EventEmitter
 		@sub_sock = zmq.socket 'sub'
 		@sub_sock.connect @metadata.pub_addr
 
-		@sub_sock.subscribe ''
-
 		@sub_sock.on 'message', (msg...) =>
 			this.emit 'message', msg
 
 	subscribe: (chan...) ->
-		@sub_sock.subscribe chan
+		@sub_sock.subscribe c for c in chan
+		return
 
 	unsubscribe: (chan...) ->
-		@sub_sock.subscribe chan
+		@sub_sock.unsubscribe c for c in chan
+		return
 
 	publish: (msg...) ->
 		@pub_sock.send msg
@@ -84,7 +84,7 @@ class PgmNode extends EventEmitter
 		@sub_sock.subscribe chan
 
 	unsubscribe: (chan...) ->
-		@sub_sock.subscribe chan
+		@sub_sock.unsubscribe chan
 
 	publish: (msg...) ->
 		@pub_sock.send msg

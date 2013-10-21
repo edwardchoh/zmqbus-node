@@ -8,11 +8,13 @@ main_test = (cb) ->
 	console.log "main test"
 	options =
 		type: 'tcp'
+		election_timeout: 500
 	n1 = index.createNode(options)
 	n1.on 'ready', () ->
-		#n1.subscribe 'chan1'
+		n1.subscribe 'chan1'
 		setInterval () ->
-			n1.publish 'chan1', "msg#{process.pid}"
+			n1.publish "chan1", "msg#{process.pid}"
+			n1.publish "chan2 you won't see this"
 		, 1000
 	n1.on 'message', (msg...) ->
 		console.dir (m.toString() for m in msg)
