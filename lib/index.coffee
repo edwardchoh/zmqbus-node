@@ -18,8 +18,12 @@ exports.getOptions = (options = {}) ->
 	for key, value of base_options
 		options[key] = value if not options.hasOwnProperty key
 
-	if options.type not in ['tcp', 'pgm', 'epgm']
-		throw new Error 'type must be tcp, pgm or epgm'
+	# PGM/EPGM not supported yet
+	###if options.type not in ['tcp', 'pgm', 'epgm']
+		throw new Error 'type must be tcp, pgm or epgm'###
+
+	if options.type not in ['tcp']
+		throw new Error 'type must be tcp'
 
 	isNumber = (n) ->
 		!isNaN(parseFloat(n)) && isFinite(n)

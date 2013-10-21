@@ -6,8 +6,5 @@
 	"dependencies": {
 		"zmq": "2.5.x",
 		"async": "0.2.x",
-		"should": ">=0.x.x",
-		"winston": ">=0.0.1",
-		"parambulator": "0.1.x"
 	}
 }
