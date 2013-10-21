@@ -23,7 +23,7 @@ main_test = (cb) ->
 
 node_test = (cb) ->
 	console.log "node test"
-	n1 = new node.ElectedNode()
+	n1 = new node.ElectedNode index.getOptions()
 	n1.on 'ready', () ->
 		#n1.subscribe 'chan1'
 		setInterval () ->
@@ -38,7 +38,7 @@ node_test = (cb) ->
 
 election_test = (cb) ->
 	console.log "election test"
-	elector = new election.Elector({pid: process.pid})
+	elector = new election.Elector index.getOptions(), {pid: process.pid}
 	elector.on 'ready', (addr) ->
 		console.log "starting id: #{elector.id}"
 		elector.start()

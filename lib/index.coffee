@@ -11,7 +11,7 @@ base_options =
 	pgm_addr: '239.1.2.4'
 	pgm_port: 45555
 
-exports.createNode = (options = {}) ->
+exports.getOptions = (options = {}) ->
 	throw new Error 'options must be an object' if typeof options isnt 'object'
 
 	# set options with base_options if not found
@@ -28,6 +28,11 @@ exports.createNode = (options = {}) ->
 	for a in ['election_timeout', 'heartbeat_period', 'heartbeat_timeout', 'multicast_port', 'pgm_port']
 		if not isNumber options[a]
 			throw new Error "#{a} must be a number"
+
+	return options
+
+exports.createNode = (options = {}) ->
+	options = exports.getOptions options
 
 	if options.type == 'tcp'
 		node = new node.ElectedNode(options)
