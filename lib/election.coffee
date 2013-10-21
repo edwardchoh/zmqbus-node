@@ -1,23 +1,19 @@
 dgram = require 'dgram'
 crypto = require 'crypto'
-#common = require './common'
 EventEmitter = require('events').EventEmitter
 
 typeIsArray = Array.isArray || (value) -> return {}.toString.call(value) is '[object Array]'
 
 class Elector extends EventEmitter
-	constructor: (@metadata = {}, @mcast_addr = '255.255.255.255', @mcast_port = 45555) ->
+	constructor: (@options, @metadata = {}) ->
 		@id = crypto.randomBytes(6).toString('hex')
 		@metadata.id = @id
 
 		@elect_last = {id: ''}
 		@election_in_progress = false
 		@elect_state = 0
-		@elect_timeout = 1000
 
 		@last_hb_time = 0
-		@hb_period = 1000
-		@hb_timeout = 3000
 
 		@sock = dgram.createSocket 'udp4'
 
@@ -31,14 +27,14 @@ class Elector extends EventEmitter
 				# ignore malformed JSON
 				return
 
-		@sock.bind @mcast_port, '0.0.0.0', () =>
+		@sock.bind @options.multicast_port, '0.0.0.0', () =>
 			@sock.setBroadcast true
-			@sock.addMembership @mcast_addr if @mcast_addr != '255.255.255.255'
+			@sock.addMembership @options.multicast_addr if @options.multicast_addr != '255.255.255.255'
 			this.emit 'ready', (@sock.address())
 
 	broadcast: (advert) ->
 		msg = new Buffer JSON.stringify(advert)
-		@sock.send msg, 0, msg.length, @mcast_port, @mcast_addr
+		@sock.send msg, 0, msg.length, @options.multicast_port, @options.multicast_addr
 
 	process_msg: (msg, rinfo) ->
 		return if not typeIsArray msg or msg.length < 2
@@ -73,7 +69,7 @@ class Elector extends EventEmitter
 				# this node got elected
 				@hb_handle = setInterval () =>
 					this.broadcast ['hb', @id]
-				, @hb_period
+				, @options.heartbeat_period
 			this.emit 'elected', @elect_last
 		else if msg[0] == 'same'
 			@election_in_progress = false
@@ -81,12 +77,11 @@ class Elector extends EventEmitter
 	start: () ->
 		checkHeartbeat = () =>
 			delta = new Date().getTime() - @last_hb_time
-			if delta >= @hb_timeout
+			if delta >= @options.heartbeat_timeout
 				# haven't heard from the elected, force an election
-				#console.log "hb timeout #{delta}, forcing election"
 				this.start_election()
 		checkHeartbeat()
-		setInterval checkHeartbeat, @hb_period
+		setInterval checkHeartbeat, @options.heartbeat_period
 
 	start_election: () ->
 		return if @election_in_progress
@@ -102,6 +97,6 @@ class Elector extends EventEmitter
 			else
 				this.broadcast ['elect', 'winner', @elect_last]
 			@elector = false
-		, @elect_timeout
+		, @options.election_timeout
 
 exports.Elector = Elector

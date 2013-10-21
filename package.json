@@ -4,11 +4,10 @@
 	"version": "0.0.1",
 	"private": true,
 	"dependencies": {
-		"zmq": ">=0.0.1",
-		"async": ">=0.0.1",
+		"zmq": "2.5.x",
+		"async": "0.2.x",
 		"should": ">=0.x.x",
 		"winston": ">=0.0.1",
-		"node-uuid": ">=0.0.1",
-		"mdns": ">=0.0.1"
+		"parambulator": "0.1.x"
 	}
 }
