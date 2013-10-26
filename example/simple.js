@@ -1,4 +1,4 @@
-var zmqbus = require('../lib/index.js');
+var zmqbus = require('zmqbus');
 
 /* simple quote sender/reader.
    Run multiple processes to send/receive cluster-wide.
