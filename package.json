@@ -11,7 +11,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/edwardchoh/zmqbus.git"
+		"url": "https://github.com/edwardchoh/zmqbus-node.git"
 	},
 	"main": "lib/index.js",
 	"dependencies": {
