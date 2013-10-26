@@ -108,7 +108,7 @@ require('zmqbus').createNode() accepts a config object with the following option
     * A node can be assigned a higher priority, so that it gets elected ahead of lesser priority nodes.
     * Default: `0`, set between 0 - 99.
   * `election_timeout`
-    * Elections received votes from all nodes in a cluster, the election waits for up to election_timeout milliseconds before it closes.
+    * Elections receive votes from all nodes in a cluster, the election waits for up to election_timeout milliseconds before it closes.
     * Default: `2000`. Set to higher value if network is lossy.
   * `heartbeat_period`
     * Master node heartbeats with nodes using this period (in msec).
@@ -117,10 +117,10 @@ require('zmqbus').createNode() accepts a config object with the following option
     * If nodes detect no heartbeat beyond this timeout (in msec), an election is called for.
     * Default: `6000`. Set to higher value if network is lossy.
   * `multicast_addr`
-    * Nodes discover and elect each other through multicast UDP using this address. Nodes form a cluster identified by multicast_addr and multicast_port. To run multiple clusters in a single physical network change the multicast_addr or multicast_port.
+    * Nodes discover and elect each other through multicast UDP using this address. Nodes in a cluster are identified by `multicast_addr`:`multicast_port`. To run multiple clusters in a single physical subnet change `multicast_addr`:`multicast_port`.
     * Default: `'239.1.2.4'`. Set to any private multicast address, or set to '255.255.255.255' for subnet broadcast if the subnet router has issues with multicasting.
   * `multicast_port`
-    * See above
+    * See above.
     * Default: `45555`. Set to another port number (max. 65535) to run multiple clusters on a physical subnet.
 
 Example:
