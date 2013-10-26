@@ -3,6 +3,7 @@ parambulator = require 'parambulator'
 
 base_options =
 	type: 'tcp'
+	election_priority: 0
 	election_timeout: 2000
 	heartbeat_period: 2000
 	heartbeat_timeout: 6000

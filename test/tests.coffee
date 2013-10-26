@@ -3,6 +3,7 @@ election = require '../lib/election'
 async = require 'async'
 assert = require 'assert'
 index = require '../lib/index'
+util = require 'util'
 
 main_test = (cb) ->
 	console.log "main test"
@@ -57,7 +58,40 @@ election_test = (cb) ->
 		cb(null)
 	, 5000
 
+election_priority_test = (cb) ->
+	console.log "election priority test"
+	e1 = new election.Elector index.getOptions(), {pid: process.pid}
+	o2 = util._extend index.getOptions()
+	o2.election_priority = 1
+	e2 = new election.Elector o2, {pid: process.pid + 1}
+	e3 = new election.Elector index.getOptions(), {pid: process.pid}
+	for elector in [e1, e2, e3]
+		elector.on 'ready', (elector, addr) ->
+			console.log "starting id: #{elector.id}"
+			elector.start()
+		elector.on 'error', (err) ->
+			console.dir err
+		elector.on 'message', (msg, rinfo) ->
+			console.dir msg
+			#console.dir rinfo
+		elector.on 'elected', (elect) ->
+			console.log 'elected'
+			console.dir elect
+
+	setTimeout () ->
+		console.log "stopping #{e1.id}"
+		e1.stop()
+		setTimeout () ->
+			console.log "stopping #{e2.id}"
+			e2.stop()
+			setTimeout () ->
+				cb(null)
+			, 5000
+		, 5000
+	, 5000
+
 async.series [
+	election_priority_test
 	main_test
 	node_test
 	election_test

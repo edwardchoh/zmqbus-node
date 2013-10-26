@@ -28,8 +28,8 @@ class ElectedNode extends EventEmitter
 		@ready = false
 
 		@elector = new election.Elector @options, @metadata
-		@elector.on 'ready', (addr) =>
-			@elector.start()
+		@elector.on 'ready', (elector, addr) =>
+			elector.start()
 		@elector.on 'error', (err) =>
 			this.emit 'error', err
 		@elector.on 'elected', (elect) =>

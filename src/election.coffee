@@ -1,12 +1,16 @@
 dgram = require 'dgram'
-crypto = require 'crypto'
 EventEmitter = require('events').EventEmitter
 
 typeIsArray = Array.isArray || (value) -> return {}.toString.call(value) is '[object Array]'
+lpad = (value, padding) ->
+	zeroes = '0'
+	zeroes += '0' for i in [1..padding]
+	(zeroes + value).slice(padding * - 1)
 
 class Elector extends EventEmitter
 	constructor: (@options, @metadata = {}) ->
-		@id = crypto.randomBytes(6).toString('hex')
+		val = Math.floor(Math.random() * 1024 * 1024)
+		@id = (lpad 99 - @options.election_priority, 2) + (lpad val, 8)
 		@metadata.id = @id
 
 		@elect_last = {id: ''}
@@ -21,7 +25,6 @@ class Elector extends EventEmitter
 			this.emit 'error', err
 		@sock.on 'message', (msg, rinfo) =>
 			try
-				#this.emit 'message', JSON.parse(msg.toString()), rinfo
 				this.process_msg JSON.parse(msg.toString()), rinfo
 			catch e
 				# ignore malformed JSON
@@ -30,9 +33,10 @@ class Elector extends EventEmitter
 		@sock.bind @options.multicast_port, '0.0.0.0', () =>
 			@sock.setBroadcast true
 			@sock.addMembership @options.multicast_addr if @options.multicast_addr != '255.255.255.255'
-			this.emit 'ready', (@sock.address())
+			this.emit 'ready', this, @sock.address()
 
 	broadcast: (advert) ->
+		return if not @sock
 		msg = new Buffer JSON.stringify(advert)
 		@sock.send msg, 0, msg.length, @options.multicast_port, @options.multicast_addr
 
@@ -81,7 +85,13 @@ class Elector extends EventEmitter
 				# haven't heard from the elected, force an election
 				this.start_election()
 		checkHeartbeat()
-		setInterval checkHeartbeat, @options.heartbeat_period
+		@checkHeartbeatHandle = setInterval checkHeartbeat, @options.heartbeat_period
+
+	stop: () ->
+		clearInterval @checkHeartbeatHandle
+		@checkHeartbeatHandle = null
+		@sock.close()
+		@sock = null
 
 	start_election: () ->
 		return if @election_in_progress
