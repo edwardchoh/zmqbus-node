@@ -1,8 +1,8 @@
-node = require '../lib/node'
-election = require '../lib/election'
+node = require '../src/node'
+election = require '../src/election'
 async = require 'async'
 assert = require 'assert'
-index = require '../lib/index'
+index = require '../src/index'
 util = require 'util'
 
 main_test = (cb) ->
