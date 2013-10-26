@@ -1,6 +1,6 @@
 # zmqbus
 
-   Peer to peer messaging bus, minimal setup with failover and pub/sub functionality.
+   Peer to peer messaging bus, zero setup with failover and pub/sub functionality.
 
    zmqbus is a distributed messaging bus and event emitter built with ZeroMQ. And it's open source.
 
