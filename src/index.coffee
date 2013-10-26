@@ -1,5 +1,4 @@
 node = require './node'
-parambulator = require 'parambulator'
 
 base_options =
 	type: 'tcp'
