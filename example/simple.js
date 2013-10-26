@@ -4,18 +4,18 @@ var zmqbus = require('../lib/index.js');
    Run multiple processes to send/receive cluster-wide.
 */
 
-msgbus = zmqbus.createNode();
-msgbus.on('ready', function() {
+var node = zmqbus.createNode();
+node.on('ready', function() {
 	// subscribe to equity channel
-	msgbus.subscribe("equity");
+	node.subscribe("equity");
 	setInterval(fakeEquityQuote, 1000);
 
 	// uncomment the following to receive temperature readings
-	// msgbus.subscribe("temp")
+	// node.subscribe("temp")
 	setInterval(fakeTemperatureQuote, 2000);
 });
 
-msgbus.on('message', function(msg) {
+node.on('message', function(msg) {
 	console.log("received " + msg);
 });
 
@@ -24,7 +24,7 @@ function fakeEquityQuote() {
 	var stocks = ['AAPL', 'GOOG', 'IBM', 'FB'];
 	var symbol = stocks[Math.floor(Math.random() * stocks.length)];
 	var quote = (Math.random() * 100.0 + 25.0).toFixed(2);
-	msgbus.publish('equity', symbol, quote);
+	node.publish('equity', symbol, quote);
 }
 
 function fakeTemperatureQuote() {
@@ -32,5 +32,5 @@ function fakeTemperatureQuote() {
 	var cities = ['New York, NY', 'San Francisco, CA', 'Chicago, IL'];
 	var city = cities[Math.floor(Math.random() * cities.length)];
 	var quote = (Math.random() * 50.0 + 30.0).toFixed(2);
-	msgbus.publish('temp', city, quote);
+	node.publish('temp', city, quote);
 }
