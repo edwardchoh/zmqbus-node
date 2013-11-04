@@ -1,7 +1,7 @@
 {
 	"name": "zmqbus",
 	"description": "A broker-less message bus with failover",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"keywords": ["zeromq", "zmq", "0mq", "ømq", "pubsub", "messages", "messaging", "broker", "brokerless", "bus", "failover"],
 	"author": "Edward Choh <edward@technipork.com>",
 	"contributors": [
