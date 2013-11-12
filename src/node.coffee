@@ -9,8 +9,8 @@ class Forwarder
 	constructor: () ->
 		@sub = zmq.socket 'sub'
 		@pub = zmq.socket 'pub'
-		@sub.bindSync "tcp://*:*"
-		@pub.bindSync "tcp://*:*"
+		@sub.bindSync "tcp://0.0.0.0:*"
+		@pub.bindSync "tcp://0.0.0.0:*"
 
 		@sub_addr = common.get_local_endpoint @sub
 		@pub_addr = common.get_local_endpoint @pub
