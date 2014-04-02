@@ -26,6 +26,7 @@ class ElectedNode extends EventEmitter
 		@metadata = {sub_addr: @fwd.sub_addr, pub_addr: @fwd.pub_addr}
 
 		@ready = false
+		@subscriptions = []
 
 		@elector = new election.Elector @options, @metadata
 		@elector.on 'ready', (elector, addr) =>
@@ -53,15 +54,22 @@ class ElectedNode extends EventEmitter
 		@sub_sock = zmq.socket 'sub'
 		@sub_sock.connect @metadata.pub_addr
 
+		@sub_sock.subscribe s for s in @subscriptions
 		@sub_sock.on 'message', (msg...) =>
 			this.emit 'message', msg
 
 	subscribe: (chan...) ->
-		@sub_sock.subscribe c for c in chan
+		for c in chan
+			@sub_sock.subscribe c
+			@subscriptions.push c if @subscriptions.indexOf c >= 0
 		return
 
 	unsubscribe: (chan...) ->
-		@sub_sock.unsubscribe c for c in chan
+
+		for c in chan
+			@sub_sock.unsubscribe c
+			idx = @subscriptions.indexOf c
+			@subscriptions.splice idx, 1 if idx >= 0
 		return
 
 	publish: (msg...) ->
