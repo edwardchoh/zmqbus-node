@@ -1,4 +1,4 @@
-node = require './node'
+nodes = require './node'
 
 base_options =
 	type: 'tcp'
@@ -39,7 +39,7 @@ exports.createNode = (options = {}) ->
 	options = exports.getOptions options
 
 	if options.type == 'tcp'
-		node = new node.ElectedNode(options)
+		node = new nodes.ElectedNode(options)
 	else
-		node = new node.PgmNode(options)
+		node = new nodes.PgmNode(options)
 	return node

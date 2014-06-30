@@ -61,7 +61,7 @@ class ElectedNode extends EventEmitter
 	subscribe: (chan...) ->
 		for c in chan
 			@sub_sock.subscribe c
-			@subscriptions.push c if @subscriptions.indexOf c >= 0
+			@subscriptions.push c if @subscriptions.indexOf(c) < 0
 		return
 
 	unsubscribe: (chan...) ->
