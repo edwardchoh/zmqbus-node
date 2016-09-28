@@ -2,6 +2,9 @@
   "name": "zmqbus",
   "description": "A broker-less message bus with failover",
   "version": "0.0.4",
+  "scripts":{
+    "test":"node script/test.js"    
+  },
   "keywords": [
     "zeromq",
     "zmq",
@@ -20,6 +23,10 @@
     {
       "name": "Edward Choh",
       "email": "edward@technipork.com"
+    },
+    {
+      "name":"Eric Satterwhite",
+      "email":"esatterwhite@wi.rr.com"
     }
   ],
   "repository": {
