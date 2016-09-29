@@ -1,8 +1,10 @@
+/*jshint esnext: true, laxcomma: true, node: true, mocha: true */
 'use strict';
 const assert = require('assert');
 const sinon  = require('sinon')
 const zmqbus = require('../');
 const Elector = require('../lib/election');
+const async = require('async');
 
 describe('zmqbus',function(){
     describe('createNode', function(){
@@ -40,19 +42,21 @@ describe('zmqbus',function(){
 	})
 
 	describe('Elector',function(){
-		let elector;
+		var elector;
 		before(function(done){
-			elector = new Elector({election_timeout: 2000, multicast_port:55555})
+			done()
 		});
 		
 		after(function(done){
 			elector.stop();
 			elector = null;
+			done();
 		});
 
 		it('should elect it self', function( done ){
 			this.timeout( 6000);
 			
+			elector = new Elector({election_timeout: 2000})
 			elector.on('ready', (addr) =>{
 				elector.start()
 			})
@@ -61,9 +65,35 @@ describe('zmqbus',function(){
 
 			elector.on('elected', (elect) =>{
 				assert.equal(elect.id, elector.id);
-				console.log('elected');
 				done()
 			})
 		});
 	})
+
+	describe('Election Priority', function(){
+		let n1, n2, n3;
+		after(function( done ){
+			n1.stop();
+			n2.stop();
+			n3.stop();
+			n1 = n2 = n3 = null;
+			done();
+		});
+		
+		it('should elect the node with the highest priorty', function( done ){
+			this.timeout(10000);	
+			n1 = new Elector({election_timeout: 250});
+			n2 = new Elector({election_priority: 5, election_timeout: 250});
+			n3 = new Elector({election_priority:1, election_timeout: 250});
+			async.each([n1,n2,n3], function( node, cb ){
+				node.on('ready', cb);
+			}, function( err, result ){
+				let nodes = [n1,n2,n3].sort( ( a, b ) => {
+					return a.options.election_priority > b.options.election_priority ? -1 : 1;
+				});
+				assert.equal(nodes[0].options.election_priority, 5)
+				done();
+			});
+		});
+	});
 })
