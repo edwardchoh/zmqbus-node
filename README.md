@@ -1,4 +1,4 @@
-# zmqbus
+![ZMQBUS](assets/zmqbus-logo.png)
 
    Peer to peer messaging bus, zero setup with failover and pub/sub functionality.
 
