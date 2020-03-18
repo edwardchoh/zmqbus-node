@@ -35,11 +35,11 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "async": "^2.0.1",
     "debug": "^2.2.0",
     "zeromq": "^5.2.0"
   },
   "devDependencies": {
+    "async": "^2.0.1",
     "mocha": "^3.1.0",
     "sinon": "^1.17.6",
     "watchit": "0.0.4"
