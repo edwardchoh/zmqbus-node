@@ -37,7 +37,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "debug": "^2.2.0",
-    "zmq": "^2.15.3"
+    "zeromq": "^5.2.0"
   },
   "devDependencies": {
     "mocha": "^3.1.0",
