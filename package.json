@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "async": "^2.0.1",
-    "mocha": "^3.1.0",
+    "mocha": "^10.2.0",
     "sinon": "^1.17.6",
     "watchit": "0.0.4"
   }
